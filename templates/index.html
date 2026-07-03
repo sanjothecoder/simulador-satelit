@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monitoratge Satèl·lit</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; }
+        .card { background: white; padding: 20px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Estat del Satèl·lit</h1>
+        <p>Temperatura: <strong id="temp">Carregant...</strong> °C</p>
+        <p>Bateria: <strong id="bat">Carregant...</strong> %</p>
+    </div>
+
+    <script>
+        function actualitzarDades() {
+            fetch('/dades')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temp').innerText = data.temperatura;
+                    document.getElementById('bat').innerText = data.bateria;
+                });
+        }
+        // Actualitza cada 1000 mil·lisegons (1 segon)
+        setInterval(actualitzarDades, 1000);
+    </script>
+</body>
+</html>
