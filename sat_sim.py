@@ -1,34 +1,32 @@
 import json
 import time
-import random
 
-# 1. Definim una variable inicial per a la bateria fora del diccionari
-bateria_actual = 100 
-
-dades_satelit = {
-    "temperatura": 25.0,
-    "bateria": bateria_actual
-}
-
+bateria_actual = 100
 print("Iniciant simulació amb sortida JSON...")
 
 try:
     while True:
-        # 1. Simulem canvis
-        dades_satelit["temperatura"] = round(random.uniform(20.0, 30.0), 1)
-        
-        # Restem bateria i apliquem el límit (clamping) aquí mateix
-        bateria_actual -= 1
-        if bateria_actual < 0:
-            bateria_actual = 100 # Reiniciem a 100 si arriba a 0
-            
-        dades_satelit["bateria"] = bateria_actual
+        # [La part de llegir l'ordre que ja tens...]
+        try:
+            with open("ordre_satelit.txt", "r") as f:
+                accio = f.read().strip()
+        except FileNotFoundError:
+            accio = "normal"
 
-        # 2. Guardem
-        with open("dades_satelit.json", "w") as fitxer:
-            json.dump(dades_satelit, fitxer)
+        if accio == "camera":
+            bateria_actual -= 5
+        elif accio == "solar":
+            bateria_actual += 2
+        else:
+            bateria_actual -= 1
+        bateria_actual = max(0, min(100, bateria_actual))
 
-        print(f"Dades actualitzades: {dades_satelit}")
+        # [La part que faltava]
+        dades = {"temperatura": 25.0, "bateria": bateria_actual}
+        with open("dades_satelit.json", "w") as f:
+            json.dump(dades, f)
+        print(f"Dades actualitzades: {dades}")
         time.sleep(1)
+
 except KeyboardInterrupt:
-    print("\nSimulació aturada.")
+    print("\nSimulació aturada per l'usuari.")

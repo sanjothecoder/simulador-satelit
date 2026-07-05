@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import json
 
 app = Flask(__name__)
@@ -13,5 +13,15 @@ def dades():
         dades = json.load(f)
     return jsonify(dades)
 
+@app.route('/ordre', methods=['POST'])
+def ordre():
+    data = request.json
+    accio = data.get('accio')
+    with open('ordre_satelit.txt', 'w') as f:
+        f.write(accio)
+    return {"status": "success", "ordre": accio}
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
+
+

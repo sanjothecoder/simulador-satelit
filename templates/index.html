@@ -10,22 +10,23 @@
 </head>
 <body>
     <div class="card">
-        <h1>Estat del Satèl·lit</h1>
-        <p>Temperatura: <strong id="temp">Carregant...</strong> °C</p>
-        <p>Bateria: <strong id="bat">Carregant...</strong> %</p>
+       <h3>Controls del Satèl·lit</h3>
+       <button onclick="enviarOrdre('camera')">Activar Càmera</button>
+       <button onclick="enviarOrdre('solar')">Activar Panells</button>
     </div>
 
     <script>
-        function actualitzarDades() {
-            fetch('/dades')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('temp').innerText = data.temperatura;
-                    document.getElementById('bat').innerText = data.bateria;
-                });
+        function enviarOrdre(accio) {
+            fetch('/ordre', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accio: accio })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Ordre enviada:', data));
         }
-        // Actualitza cada 1000 mil·lisegons (1 segon)
-        setInterval(actualitzarDades, 1000);
+        // ... mantén el teu script actual (actualitzarDades) aquí sota        
     </script>
+
 </body>
 </html>
